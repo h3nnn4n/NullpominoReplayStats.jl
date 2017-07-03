@@ -9,14 +9,24 @@ function parse_rep(name)
     totalPieceLocked = 0
     lps = 0.0
     lpm = 0.0
+    totalLines = 0
+    gmt = now()
 
     rplay_ok = false
 
     open(name) do f
-
         for line in readlines(f)
             if contains(line, "0.ruleopt.strRuleName=STANDARD-FAST-B")
                 rplay_ok = true
+            elseif contains(line, "timestamp.gmt")
+                nss = replace(line, r"timestamp.gmt=", "")
+                df = "yyyy-mm-dd-HH-MM-SS"
+                #=println(df)=#
+                #=println(nss)=#
+                #=println(DateTime(nss, df))=#
+                df = DateTime(nss, df)
+                #=println(Dates.format(df, "yyyy-mm-dd HH:MM:SS"))=#
+                gmt = df
             elseif contains(line, "timestamp.time")
                 #=nss = replace(line, r"timestamp.time=", "")=#
                 #=ns  = chop(replace(nss, r"\\:", "."))=#
@@ -63,15 +73,34 @@ function parse_rep(name)
                 nss = chop(replace(line, r"0.statistics.ppm=", ""))
                 ppm = parse(Float64, nss)
                 #=println("ppm ", ppm)=#
+            elseif contains(line, "result.totallines=")
+                nss = chop(replace(line, r"result.totallines=", ""))
+                totalLines = parse(Int32, nss)
+                #=println("pps ", totalLines)=#
             end
         end
     end
 
-    return game_data(rplay_ok, pps, ppm, gamerate, lps, lpm, time, totalPieceActiveTime, totalPieceLocked)
+    return game_data(rplay_ok, pps, ppm, gamerate, lps, lpm, time, totalPieceActiveTime, totalPieceLocked, totalLines, gmt)
 end
 
-function main(name)
-    println("Opening ", name)
-    parse_rep(name)
+function main()
+    name = ARGS[1]
+
+    base_pwd = pwd()
+    cd(name)
+
+    for file in readdir(name)
+        #=println(file)=#
+        data = parse_rep(file)
+
+        if data.ok && data.totalLines == 40
+            #=println(data)=#
+            @printf("%s %f\n", Dates.format(data.gmt, "yyyy-mm-dd-HH:MM:SS"), data.totalPieceActiveTime / 60.0)
+        end
+    end
+
+    cd(base_pwd)
 end
 
+main()

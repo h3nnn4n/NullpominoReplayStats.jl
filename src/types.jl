@@ -8,4 +8,6 @@ type game_data
     time                 :: Int64
     totalPieceActiveTime :: Int64
     totalPieceLocked     :: Int64
+    totalLines           :: Int64
+    gmt                  :: DateTime
 end
