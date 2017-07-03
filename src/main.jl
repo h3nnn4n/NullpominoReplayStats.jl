@@ -96,7 +96,7 @@ function main()
 
         if data.ok && data.totalLines == 40
             #=println(data)=#
-            @printf("%s %f\n", Dates.format(data.gmt, "yyyy-mm-dd-HH:MM:SS"), data.totalPieceActiveTime / 60.0)
+            @printf("%s %f %f %f\n", Dates.format(data.gmt, "yyyy-mm-dd-HH:MM:SS"), data.totalPieceActiveTime / 60.0, data.pps, data.lps)
         end
     end
 

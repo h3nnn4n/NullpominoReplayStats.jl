@@ -46,4 +46,6 @@ set xtics rotate by -55
 
 plot \
 'log'      u (column(0)):2 notitle w l ls 1, \
+#'log'      u (column(0)):4 notitle w l ls 1, \
+#'log'      u (column(0)):3 notitle w l ls 1, \
 #'log'      u 1:2 notitle w boxes ls 1, \
