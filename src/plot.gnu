@@ -3,8 +3,8 @@
 reset
 
 #set terminal pngcairo size 1600,600 enhanced font 'Verdana,9'
-set terminal pngcairo size 650,220 enhanced dashed font 'Verdana,10'
-#set terminal pngcairo size 1650,600 enhanced dashed font 'Verdana,10'
+#set terminal pngcairo size 650,220 enhanced dashed font 'Verdana,10'
+set terminal pngcairo size 1650,600 enhanced dashed font 'Verdana,10'
 set output 'time.png'
 
 set style line 11 lc rgb '#808080' lt 1
@@ -30,7 +30,7 @@ set key bottom right
 
 #set key samplen 4
 
-set xlabel 'Date'
+set xlabel 'Number of games'
 set ylabel 'Time (s)'
 
 #set yrange [0:]
@@ -38,12 +38,12 @@ set yrange [0:]
 
 set xtics rotate by -55
 
-set xdata time
-set timefmt '%Y-%m-%d-%H:%M:%S'
+#set xdata time
+#set timefmt '%Y-%m-%d-%H:%M:%S'
 
-set boxwidth 0.5
-set style fill solid
+#set boxwidth 0.5
+#set style fill solid
 
 plot \
-'log'      u 1:2 notitle w boxes ls 1, \
-#'log'      u (column(0)):2 notitle w l ls 1, \
+'log'      u (column(0)):2 notitle w l ls 1, \
+#'log'      u 1:2 notitle w boxes ls 1, \
