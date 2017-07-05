@@ -26,7 +26,7 @@ set style line 6 lw 1 lt 1 lc rgb '#E6AB02' # dark banana
 set style line 7 lw 1 lt 1 lc rgb '#A6761D' # dark tan
 set style line 8 lw 1 lt 1 lc rgb '#666666' # dark gray
 
-set key bottom right
+set key top right
 
 #set key samplen 4
 
@@ -48,9 +48,9 @@ set xrange[0:STATS_records]
 #set style fill solid
 
 plot \
-'log'      u (column(0)):2 notitle w l ls 1, \
-'log'      u (column(0)):2 notitle smooth bezier ls 2, \
-'log'      u (column(0)):5 notitle w l ls 3, \
+'log'      u (column(0)):2 t 'Raw Times'      w l ls 1, \
+'log'      u (column(0)):2 t 'Smoothed Times' smooth bezier ls 2, \
+'log'      u (column(0)):5 t 'PB'             w l ls 3, \
 
 #plot \
 #'log'      u (column(0)):3 notitle w l ls 1, \
