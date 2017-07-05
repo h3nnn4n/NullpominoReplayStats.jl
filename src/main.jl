@@ -90,13 +90,23 @@ function main()
     base_pwd = pwd()
     cd(name)
 
+    first = true
+    best = 0
+
     for file in readdir(name)
         if contains(file, ".rep")
             data = parse_rep(file)
 
             if data.ok && data.totalLines == 40
+                if first
+                    first = false
+                    best = data.totalPieceActiveTime / 60.0
+                end
+
+                best = min(best, data.totalPieceActiveTime / 60.0)
+
                 #=println(data)=#
-                @printf("%s %f %f %f\n", Dates.format(data.gmt, "yyyy-mm-dd-HH:MM:SS"), data.totalPieceActiveTime / 60.0, data.pps, data.lps)
+                @printf("%s %f %f %f %f\n", Dates.format(data.gmt, "yyyy-mm-dd-HH:MM:SS"), data.totalPieceActiveTime / 60.0, data.pps, data.lps, best)
             end
         end
     end

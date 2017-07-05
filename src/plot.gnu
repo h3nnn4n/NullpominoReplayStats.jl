@@ -33,10 +33,13 @@ set key bottom right
 set xlabel 'Number of games'
 set ylabel 'Time (s)'
 
-#set yrange [0:]
 set yrange [0:]
+#set xrange [0:]
 
 set xtics rotate by -55
+
+stats 'log'
+set xrange[0:STATS_records]
 
 #set xdata time
 #set timefmt '%Y-%m-%d-%H:%M:%S'
@@ -47,6 +50,11 @@ set xtics rotate by -55
 plot \
 'log'      u (column(0)):2 notitle w l ls 1, \
 'log'      u (column(0)):2 notitle smooth bezier ls 2, \
-#'log'      u (column(0)):4 notitle w l ls 1, \
+'log'      u (column(0)):5 notitle w l ls 3, \
+
+#plot \
 #'log'      u (column(0)):3 notitle w l ls 1, \
+#'log'      u (column(0)):3 notitle smooth bezier ls 2, \
+
+#'log'      u (column(0)):4 notitle w l ls 1, \
 #'log'      u 1:2 notitle w boxes ls 1, \
