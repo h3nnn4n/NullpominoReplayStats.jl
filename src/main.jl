@@ -19,7 +19,7 @@ function parse_rep(name)
             if contains(line, "0.ruleopt.strRuleName=STANDARD-FAST-B")
                 rplay_ok = true
             elseif contains(line, "timestamp.gmt")
-                nss = replace(line, r"timestamp.gmt=", "")
+                nss = replace(replace(line, r"timestamp.gmt=", ""), r"\n", "")
                 df = "yyyy-mm-dd-HH-MM-SS"
                 #=println(df)=#
                 #=println(nss)=#
@@ -42,39 +42,39 @@ function parse_rep(name)
 
                 #=println("time ", xh, xm, xs)=#
             elseif contains(line, "statistics.time=")
-                nss = chop(replace(line, r"0.statistics.time=", ""))
+                nss = replace(replace(line, r"0.statistics.time=", ""), r"\n", "")
                 time = parse(Int32, nss)
                 #=println("time ", time)=#
             elseif contains(line, "statistics.totalPieceActiveTime=")
-                nss = chop(replace(line, r"0.statistics.totalPieceActiveTime=", ""))
+                nss = replace(replace(line, r"0.statistics.totalPieceActiveTime=", ""), r"\n", "")
                 totalPieceActiveTime = parse(Int32, nss)
                 #=println("totalPieceActiveTime ", totalPieceActiveTime)=#
             elseif contains(line, "statistics.gamerate=")
-                nss = chop(replace(line, r"0.statistics.gamerate=", ""))
+                nss = replace(replace(line, r"0.statistics.gamerate=", ""), r"\n", "")
                 gamerate = parse(Float64, nss)
                 #=println("gamerate ", gamerate)=#
             elseif contains(line, "statistics.totalPieceLocked=")
-                nss = chop(replace(line, r"0.statistics.totalPieceLocked=", ""))
+                nss = replace(replace(line, r"0.statistics.totalPieceLocked=", ""), r"\n", "")
                 totalPieceLocked = parse(Int32, nss)
                 #=println("pieces ", totalPieceLocked)=#
             elseif contains(line, "statistics.lpm=")
-                nss = chop(replace(line, r"0.statistics.lpm=", ""))
+                nss = replace(replace(line, r"0.statistics.lpm=", ""), r"\n", "")
                 lpm = parse(Float64, nss)
                 #=println("lpm ", lpm)=#
             elseif contains(line, "statistics.lps=")
-                nss = chop(replace(line, r"0.statistics.lps=", ""))
+                nss = replace(replace(line, r"0.statistics.lps=", ""), r"\n", "")
                 lps = parse(Float64, nss)
                 #=println("lps ", lps)=#
             elseif contains(line, "statistics.pps=")
-                nss = chop(replace(line, r"0.statistics.pps=", ""))
+                nss = replace(replace(line, r"0.statistics.pps=", ""), r"\n", "")
                 pps = parse(Float64, nss)
                 #=println("pps ", pps)=#
             elseif contains(line, "statistics.ppm=")
-                nss = chop(replace(line, r"0.statistics.ppm=", ""))
+                nss = replace(replace(line, r"0.statistics.ppm=", ""), r"\n", "")
                 ppm = parse(Float64, nss)
                 #=println("ppm ", ppm)=#
             elseif contains(line, "result.totallines=")
-                nss = chop(replace(line, r"result.totallines=", ""))
+                nss = replace(line, r"result.totallines=", "")
                 totalLines = parse(Int32, nss)
                 #=println("pps ", totalLines)=#
             end
@@ -91,12 +91,13 @@ function main()
     cd(name)
 
     for file in readdir(name)
-        #=println(file)=#
-        data = parse_rep(file)
+        if contains(file, ".rep")
+            data = parse_rep(file)
 
-        if data.ok && data.totalLines == 40
-            #=println(data)=#
-            @printf("%s %f %f %f\n", Dates.format(data.gmt, "yyyy-mm-dd-HH:MM:SS"), data.totalPieceActiveTime / 60.0, data.pps, data.lps)
+            if data.ok && data.totalLines == 40
+                #=println(data)=#
+                @printf("%s %f %f %f\n", Dates.format(data.gmt, "yyyy-mm-dd-HH:MM:SS"), data.totalPieceActiveTime / 60.0, data.pps, data.lps)
+            end
         end
     end
 
